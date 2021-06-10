@@ -1,4 +1,4 @@
-import { Button, createStyles, FormControl, FormControlLabel, InputLabel, makeStyles, MenuItem, Radio, RadioGroup, Select, TextField, Theme } from "@material-ui/core";
+import { Button, createStyles, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, InputLabel, makeStyles, MenuItem, Radio, RadioGroup, Select, TextField, Theme } from "@material-ui/core";
 import React from "react";
 import { SectionProps } from "./Section";
 
@@ -32,6 +32,15 @@ export default function AddSectionForm(props: AddSectionFormProps) {
   const [options, setOptions] = React.useState([] as string[]);
   const [newOption, setNewOption] = React.useState('');
   const [answer, setAnswer] = React.useState('');
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
+  const handleOpenClick = () => {
+    setOpen(true);
+  }
 
   const handleAnswerChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setAnswer(event.target.value as string);
@@ -166,33 +175,47 @@ export default function AddSectionForm(props: AddSectionFormProps) {
     setOptions([]);
     setNewOption('');
     setAnswer('');
+    handleClose();
   }
 
   return (
     <div>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="type-label">Content Type</InputLabel>
-        <Select
-          id="type-select"
-          label="Content Type"
-          value={type}
-          onChange={handleTypeChange}
-        >
-          <MenuItem value={'text'}>Text Content</MenuItem>
-          <MenuItem value={'video'}>Embed Video Content</MenuItem>
-          <MenuItem value={'qna'}>QnA Content</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        label="Section Heading"
-        id="section-heading"
-        value={heading}
-        onChange={handleHeadingChange}
-      />
-      {type === 'text' ? renderTextForm() : <></>}
-      {type === 'video' ? renderVideoForm() : <></>}
-      {type === 'qna' ? renderQnAForm() : <></>}
-      <Button onClick={addSection}>Add Content Section</Button>
+    <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add Content Form</DialogTitle>
+        <DialogContent>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="type-label">Content Type</InputLabel>
+            <Select
+              id="type-select"
+              label="Content Type"
+              value={type}
+              onChange={handleTypeChange}
+            >
+              <MenuItem value={'text'}>Text Content</MenuItem>
+              <MenuItem value={'video'}>Embed Video Content</MenuItem>
+              <MenuItem value={'qna'}>QnA Content</MenuItem>
+            </Select>
+            <TextField
+              label="Section Heading"
+              id="section-heading"
+              value={heading}
+              onChange={handleHeadingChange}
+              />
+            {type === 'text' ? renderTextForm() : <></>}
+            {type === 'video' ? renderVideoForm() : <></>}
+            {type === 'qna' ? renderQnAForm() : <></>}
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={addSection} color="primary">
+            Save Section
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Button onClick={handleOpenClick} variant='outlined' color='primary'>Add Section</Button>
     </div>
   );
 }
