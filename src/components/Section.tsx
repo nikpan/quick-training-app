@@ -1,11 +1,11 @@
 import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import EmbedVideoContent, { EmbedVideoProps } from './EmbedVideoContent';
 import QnAContent, { QnAContentProps } from './QnAContent';
 import TextContent, { TextContentProps } from './TextContent';
 
 export interface SectionProps {
+  index?: number,
   heading: string,
   content: QnAContentProps | TextContentProps | EmbedVideoProps
 }
@@ -19,7 +19,6 @@ export default class Section extends React.Component<SectionProps, {}> {
     const styles = {
       heading: {
         fontSize: 25,
-        // fontWeight: 'bold'
       }
     };
 
@@ -28,10 +27,11 @@ export default class Section extends React.Component<SectionProps, {}> {
       'The Worst'
     ];
 
+    let id: number = this.props.index !== undefined ? this.props.index : 0;
+
     return (
-      <Accordion>
+      <Accordion id={`anchor-${id.toString()}`} expanded={true}>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
